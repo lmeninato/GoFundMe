@@ -5,7 +5,6 @@ from selenium import webdriver
 from time import sleep
 import csv
 
-
 url = 'https://www.gofundme.com/discover'
 driver = webdriver.Chrome('C:/webdriver/chromedriver.exe')
 driver.get(url)
@@ -37,12 +36,7 @@ lower_cats = list(map(lambda x: x.lower(), all_cats))
 #make url_categories
 categories_urls = list(map(lambda x:'https://www.gofundme.com/discover/{}-fundraiser'.format(x), lower_cats))
 
-
-
-
-
 #process to extract individual gofundme urls from an individual category
-#----------------------------repeat for all categories-------------------
 
 def extract_urls_from_categories(url, MoreGFMclicks = 5):
     
@@ -75,12 +69,19 @@ def extract_urls_from_categories(url, MoreGFMclicks = 5):
             temp_url.append(link.get('href'))
 
     return(temp_url)
-#--------------------------repeat for all categories----------------------
-GFM_urls = []
-for url in categories_urls:
-    GFM_urls.append(extract_urls_from_categories(url, MoreGFMclicks = 5))
-print("All done!")
+    
+#generate lists of list of URL per category
 
+def list_urls(MoreGFMclicks = 5):
+    GFM_urls = []
+    for url in categories_urls:
+        GFM_urls.append(extract_urls_from_categories(url, MoreGFMclicks = 5))
+    print("All done!")
+    return(GFM_urls)
+
+GFM_urls = list_urls()
+
+#flatten list
 GFM_urls_list = [item for sublist in GFM_urls for item in sublist]
 GFM_urls_list = list(set(GFM_urls_list))
 
@@ -91,7 +92,20 @@ csv_file.close()
 
 #need to scrape a single url now
 
+url = 'https://www.gofundme.com/rickmuchow'
+driver = webdriver.Chrome('C:/webdriver/chromedriver.exe')
+driver.get(url)
 
+source = driver.page_source
 
+driver.close()
 
+soup = BeautifulSoup(source, 'lxml')
+#contains amount raised - goal amount - # of donators - length of fundraising
+container = soup.find_all("div",{"class":"layer-white hide-for-large mb10"})
+info_string = container[0].text
+
+ 
+title_container = soup.find_all("h1",{"class":"campaign-title"})#<h1 class="campaign-title">Help Rick Muchow Beat Cancer</h1>
+title = title_container[0].text
 
