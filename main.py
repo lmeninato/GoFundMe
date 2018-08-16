@@ -3,6 +3,9 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from time import sleep
+import numpy as np
+import pandas as pd
+
 import csv
 
 url = 'https://www.gofundme.com/discover'
@@ -60,16 +63,21 @@ def extract_urls_from_categories(url, MoreGFMclicks = 5):
     
     soup = BeautifulSoup(source, 'lxml')
     
-    
     containers = soup.findAll("div", {"class": "cell grid-item small-6 medium-4 js-fund-tile"})
-    container = containers[0]
-    temp_url = []
+    
+    temp_url = {}
+    i = 1
+    
     for container in containers:
         for link in container.find_all('a'):
-            temp_url.append(link.get('href'))
+            temp_url[link.get('href')] = i
+            i = i +1 
+            
+    temp_url = {k: ((v // 2) - 1) // 3  for k, v in temp_url.items()} #
+
 
     return(temp_url)
-    
+
 #generate lists of list of URL per category
 
 def list_urls(MoreGFMclicks = 5):
@@ -81,14 +89,18 @@ def list_urls(MoreGFMclicks = 5):
 
 GFM_urls = list_urls()
 
-#flatten list
-GFM_urls_list = [item for sublist in GFM_urls for item in sublist]
-GFM_urls_list = list(set(GFM_urls_list))
+mydf = pd.DataFrame(columns = ["Url", "Position"])
+for cat in GFM_urls:
+    temp_val = np.array(list(cat.values()))
+    temp_key = np.array(list(cat.keys()))
+    temp_df = pd.DataFrame(columns = ["Url", "Position"])
+    temp_df["Position"] = temp_val
+    temp_df["Url"] = temp_key
+    mydf = mydf.append(temp_df)
 
-csv_file = open('cms_scrape.csv', 'w')
-csv_writer = csv.writer(csv_file)
-csv_writer.writerow(GFM_urls_list)
-csv_file.close()
+#flatten list
+
+mydf.to_csv('GFM_scrape.csv', sep='\t')
 
 #need to scrape a single url now
 
@@ -108,4 +120,6 @@ info_string = container[0].text
  
 title_container = soup.find_all("h1",{"class":"campaign-title"})#<h1 class="campaign-title">Help Rick Muchow Beat Cancer</h1>
 title = title_container[0].text
+
+
 
