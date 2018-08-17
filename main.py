@@ -5,8 +5,7 @@ from selenium import webdriver
 from time import sleep
 import numpy as np
 import pandas as pd
-
-import csv
+import re
 
 url = 'https://www.gofundme.com/discover'
 driver = webdriver.Chrome('C:/webdriver/chromedriver.exe')
@@ -65,7 +64,7 @@ def extract_urls_from_categories(url, MoreGFMclicks = 5):
     
     containers = soup.findAll("div", {"class": "cell grid-item small-6 medium-4 js-fund-tile"})
     
-    temp_url = {}
+    temp_url = {}#grab category as well
     i = 1
     
     for container in containers:
@@ -105,6 +104,8 @@ mydf.to_csv('GFM_scrape.csv', sep='\t')
 #need to scrape a single url now
 
 url = 'https://www.gofundme.com/rickmuchow'
+category = mydf #extract category from mydf
+
 driver = webdriver.Chrome('C:/webdriver/chromedriver.exe')
 driver.get(url)
 
@@ -116,10 +117,32 @@ soup = BeautifulSoup(source, 'lxml')
 #contains amount raised - goal amount - # of donators - length of fundraising
 container = soup.find_all("div",{"class":"layer-white hide-for-large mb10"})
 info_string = container[0].text
+info_string = info_string.splitlines()
+info_string = list(filter(None, info_string))
 
- 
+amount_raised = int(info_string[0][1:].replace(',',''))
+
+goal = re.findall('\$(.*?) goal', info_string[1])[0]
+
+NumDonators = re.findall('by (.*?) people', info_string[2])[0]
+
+timeFundraised = re.findall("in (.*)$", info_string[2])[0]
+
 title_container = soup.find_all("h1",{"class":"campaign-title"})#<h1 class="campaign-title">Help Rick Muchow Beat Cancer</h1>
 title = title_container[0].text
 
+text_container = soup.find_all("div",{"class":"co-story truncate-text truncate-text--description js-truncate"})
+all_text = text_container[0].text
+all_text = list(filter(None,all_text.splitlines()))[0]
 
+FB_shares_container = soup.find_all("strong", {"class":"js-share-count-text"})
+FB_shares = FB_shares_container[0].text.splitlines()
+FB_shares = FB_shares[1].replace(" ", "").replace("\xa0", "")
+
+hearts_container = soup.find_all("div", {"class":"campaign-sp campaign-sp--heart fave-num"})
+hearts = hearts_container[0].text
+
+location_container = soup.find_all("div", {"class":"pills-contain"})
+location = location_container[0].text.splitlines()[-1]
+location = location.replace('\xa0', '').strip()
 
