@@ -33,10 +33,8 @@ more_cats = more_cats.splitlines()
 more_cats = list(filter(None, more_cats))
 
 all_cats = categories + more_cats # should be len(all_cats) == 18
-lower_cats = list(map(lambda x: x.lower(), all_cats))
-
 #make url_categories
-categories_urls = list(map(lambda x:'https://www.gofundme.com/discover/{}-fundraiser'.format(x), lower_cats))
+categories_urls = list(map(lambda x:{x:'https://www.gofundme.com/discover/{}-fundraiser'.format(x.lower())}, all_cats))
 
 #process to extract individual gofundme urls from an individual category
 
@@ -64,14 +62,14 @@ def extract_urls_from_categories(url, MoreGFMclicks = 5):
     
     containers = soup.findAll("div", {"class": "cell grid-item small-6 medium-4 js-fund-tile"})
     
-    temp_url = {}#grab category as well
+    temp_url = {}
     i = 1
     
     for container in containers:
         for link in container.find_all('a'):
             temp_url[link.get('href')] = i
-            i = i +1 
-            
+            i = i + 1 
+
     temp_url = {k: ((v // 2) - 1) // 3  for k, v in temp_url.items()} #
 
 
@@ -81,25 +79,35 @@ def extract_urls_from_categories(url, MoreGFMclicks = 5):
 
 def list_urls(MoreGFMclicks = 5):
     GFM_urls = []
-    for url in categories_urls:
-        GFM_urls.append(extract_urls_from_categories(url, MoreGFMclicks = 5))
+    for url_pair in categories_urls:
+        category = list(url_pair.keys())[0]
+        url = list(url_pair.values())[0]
+        GFM_urls.append([extract_urls_from_categories(url, MoreGFMclicks = 5), category])#get category from categories_urls
     print("All done!")
     return(GFM_urls)
 
 GFM_urls = list_urls()
 
-mydf = pd.DataFrame(columns = ["Url", "Position"])
+mydf = pd.DataFrame(columns = ["Url", "Category","Position"])
 for cat in GFM_urls:
-    temp_val = np.array(list(cat.values()))
-    temp_key = np.array(list(cat.keys()))
-    temp_df = pd.DataFrame(columns = ["Url", "Position"])
+    
+    temp_val = np.array(list(cat[0].values()))
+    temp_key = np.array(list(cat[0].keys()))
+    temp_category = np.repeat(cat[1], len(cat[0]))
+    
+    temp_df = pd.DataFrame(columns = ["Url", "Category", "Position"])
     temp_df["Position"] = temp_val
+    temp_df["Category"] = temp_category
     temp_df["Url"] = temp_key
+    
     mydf = mydf.append(temp_df)
 
 #flatten list
 
 mydf.to_csv('GFM_scrape.csv', sep='\t')
+
+headers = ["Url", "Category","Position", "Title", "Location","Amount_Raised", "Goal", "Number_of_Donators", "Length_of_Fundraising", "FB_Shares", "GFM_hearts"]
+mydf = mydf.reindex(columns = headers)
 
 #need to scrape a single url now
 
@@ -145,4 +153,6 @@ hearts = hearts_container[0].text
 location_container = soup.find_all("div", {"class":"pills-contain"})
 location = location_container[0].text.splitlines()[-1]
 location = location.replace('\xa0', '').strip()
+
+
 
