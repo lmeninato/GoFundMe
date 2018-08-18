@@ -128,21 +128,32 @@ def scrape_url(row_index):
     
     soup = BeautifulSoup(source, 'lxml')
     #contains amount raised - goal amount - # of donators - length of fundraising
-    container = soup.find_all("div",{"class":"layer-white hide-for-large mb10"})
-    info_string = container[0].text
-    info_string = info_string.splitlines()
-    info_string = list(filter(None, info_string))
-    
-    amount_raised = int(info_string[0][1:].replace(',',''))
-    
-    goal = re.findall('\$(.*?) goal', info_string[1])[0]
-    
-    NumDonators = re.findall('by (.*?) people', info_string[2])[0]
-    
-    timeFundraised = re.findall("in (.*)$", info_string[2])[0]
+    try:
+        container = soup.find_all("div",{"class":"layer-white hide-for-large mb10"})
+        info_string = container[0].text
+        info_string = info_string.splitlines()
+        info_string = list(filter(None, info_string))
+        
+        amount_raised = int(info_string[0][1:].replace(',',''))
+        
+        goal = re.findall('\$(.*?) goal', info_string[1])[0]
+        
+        NumDonators = re.findall('by (.*?) people', info_string[2])[0]
+        
+        timeFundraised = re.findall("in (.*)$", info_string[2])[0]
+    except:
+        amount_raised = np.nan
+        goal = np.nan
+        NumDonators = np.nan
+        timeFundraised = np.nan
+        
     
     title_container = soup.find_all("h1",{"class":"campaign-title"})#<h1 class="campaign-title">Help Rick Muchow Beat Cancer</h1>
-    title = title_container[0].text
+    
+    try:
+        title = title_container[0].text
+    except:
+        title = np.nan
     
     text_container = soup.find_all("div",{"class":"co-story truncate-text--description js-truncate"})
     
@@ -152,17 +163,26 @@ def scrape_url(row_index):
     except:
         all_text = np.nan
     
-    FB_shares_container = soup.find_all("strong", {"class":"js-share-count-text"})
-    FB_shares = FB_shares_container[0].text.splitlines()
-    FB_shares = FB_shares[1].replace(" ", "").replace("\xa0", "")
+    try:
+        FB_shares_container = soup.find_all("strong", {"class":"js-share-count-text"})
+        FB_shares = FB_shares_container[0].text.splitlines()
+        FB_shares = FB_shares[1].replace(" ", "").replace("\xa0", "")
+    except:
+        FB_shares = np.nan
+        
+    try:
+        hearts_container = soup.find_all("div", {"class":"campaign-sp campaign-sp--heart fave-num"})
+        hearts = hearts_container[0].text
+    except:
+        hearts = np.nan
     
-    hearts_container = soup.find_all("div", {"class":"campaign-sp campaign-sp--heart fave-num"})
-    hearts = hearts_container[0].text
-    
-    location_container = soup.find_all("div", {"class":"pills-contain"})
-    location = location_container[0].text.splitlines()[-1]
-    location = location.replace('\xa0', '').strip()
-    
+    try:
+        location_container = soup.find_all("div", {"class":"pills-contain"})
+        location = location_container[0].text.splitlines()[-1]
+        location = location.replace('\xa0', '').strip()
+    except:
+        location = np.nan
+        
     temp_row = np.array([[url, category, position, title, location, amount_raised, goal, NumDonators, timeFundraised, FB_shares, hearts, all_text]])
     temp_df = pd.DataFrame(temp_row, columns = headers)
     
