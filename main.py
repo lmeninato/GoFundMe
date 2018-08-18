@@ -100,59 +100,80 @@ for cat in GFM_urls:
     temp_df["Category"] = temp_category
     temp_df["Url"] = temp_key
     
-    mydf = mydf.append(temp_df)
+    mydf = mydf.append(temp_df, ignore_index = True)
 
 #flatten list
 
 mydf.to_csv('GFM_scrape.csv', sep='\t')
 
-headers = ["Url", "Category","Position", "Title", "Location","Amount_Raised", "Goal", "Number_of_Donators", "Length_of_Fundraising", "FB_Shares", "GFM_hearts"]
+headers = ["Url", "Category","Position", "Title", "Location","Amount_Raised", "Goal", "Number_of_Donators", "Length_of_Fundraising", "FB_Shares", "GFM_hearts", "Text"]
 mydf = mydf.reindex(columns = headers)
 
+
+full_df = pd.DataFrame(columns = headers)
 #need to scrape a single url now
 
-url = 'https://www.gofundme.com/rickmuchow'
-category = mydf #extract category from mydf
+def scrape_url(row_index):
+    single_row = mydf.iloc[row_index]
+    url = single_row["Url"]
+    category = single_row["Category"]
+    position = single_row["Position"]
+    
+    driver = webdriver.Chrome('C:/webdriver/chromedriver.exe')
+    driver.get(url)
+    
+    source = driver.page_source
+    
+    driver.close()
+    
+    soup = BeautifulSoup(source, 'lxml')
+    #contains amount raised - goal amount - # of donators - length of fundraising
+    container = soup.find_all("div",{"class":"layer-white hide-for-large mb10"})
+    info_string = container[0].text
+    info_string = info_string.splitlines()
+    info_string = list(filter(None, info_string))
+    
+    amount_raised = int(info_string[0][1:].replace(',',''))
+    
+    goal = re.findall('\$(.*?) goal', info_string[1])[0]
+    
+    NumDonators = re.findall('by (.*?) people', info_string[2])[0]
+    
+    timeFundraised = re.findall("in (.*)$", info_string[2])[0]
+    
+    title_container = soup.find_all("h1",{"class":"campaign-title"})#<h1 class="campaign-title">Help Rick Muchow Beat Cancer</h1>
+    title = title_container[0].text
+    
+    text_container = soup.find_all("div",{"class":"co-story truncate-text--description js-truncate"})
+    
+    try:
+        all_text = text_container[0].text
+        all_text = list(filter(None,all_text.splitlines()))[0]
+    except:
+        all_text = np.nan
+    
+    FB_shares_container = soup.find_all("strong", {"class":"js-share-count-text"})
+    FB_shares = FB_shares_container[0].text.splitlines()
+    FB_shares = FB_shares[1].replace(" ", "").replace("\xa0", "")
+    
+    hearts_container = soup.find_all("div", {"class":"campaign-sp campaign-sp--heart fave-num"})
+    hearts = hearts_container[0].text
+    
+    location_container = soup.find_all("div", {"class":"pills-contain"})
+    location = location_container[0].text.splitlines()[-1]
+    location = location.replace('\xa0', '').strip()
+    
+    temp_row = np.array([[url, category, position, title, location, amount_raised, goal, NumDonators, timeFundraised, FB_shares, hearts, all_text]])
+    temp_df = pd.DataFrame(temp_row, columns = headers)
+    
+    return(temp_df)
+    
+#full_df = full_df.append(scrape_url(0), ignore_index = True)
 
-driver = webdriver.Chrome('C:/webdriver/chromedriver.exe')
-driver.get(url)
+def scrape_all_urls():
+    full_df = pd.DataFrame(columns = headers)
+    for i in range(len(mydf)):
+        full_df = full_df.append(scrape_url(i), ignore_index = True)
+    return(full_df)
 
-source = driver.page_source
-
-driver.close()
-
-soup = BeautifulSoup(source, 'lxml')
-#contains amount raised - goal amount - # of donators - length of fundraising
-container = soup.find_all("div",{"class":"layer-white hide-for-large mb10"})
-info_string = container[0].text
-info_string = info_string.splitlines()
-info_string = list(filter(None, info_string))
-
-amount_raised = int(info_string[0][1:].replace(',',''))
-
-goal = re.findall('\$(.*?) goal', info_string[1])[0]
-
-NumDonators = re.findall('by (.*?) people', info_string[2])[0]
-
-timeFundraised = re.findall("in (.*)$", info_string[2])[0]
-
-title_container = soup.find_all("h1",{"class":"campaign-title"})#<h1 class="campaign-title">Help Rick Muchow Beat Cancer</h1>
-title = title_container[0].text
-
-text_container = soup.find_all("div",{"class":"co-story truncate-text truncate-text--description js-truncate"})
-all_text = text_container[0].text
-all_text = list(filter(None,all_text.splitlines()))[0]
-
-FB_shares_container = soup.find_all("strong", {"class":"js-share-count-text"})
-FB_shares = FB_shares_container[0].text.splitlines()
-FB_shares = FB_shares[1].replace(" ", "").replace("\xa0", "")
-
-hearts_container = soup.find_all("div", {"class":"campaign-sp campaign-sp--heart fave-num"})
-hearts = hearts_container[0].text
-
-location_container = soup.find_all("div", {"class":"pills-contain"})
-location = location_container[0].text.splitlines()[-1]
-location = location.replace('\xa0', '').strip()
-
-
-
+full_df = scrape_all_urls()
