@@ -106,6 +106,8 @@ for cat in GFM_urls:
 
 mydf.to_csv('GFM_scrape.csv', sep='\t')
 
+mydf = pd.read_csv('GFM_scrape.csv', sep = '\t')
+
 headers = ["Url", "Category","Position", "Title", "Location","Amount_Raised", "Goal", "Number_of_Donators", "Length_of_Fundraising", "FB_Shares", "GFM_hearts", "Text"]
 mydf = mydf.reindex(columns = headers)
 
@@ -187,13 +189,12 @@ def scrape_url(row_index):
     temp_df = pd.DataFrame(temp_row, columns = headers)
     
     return(temp_df)
-    
-#full_df = full_df.append(scrape_url(0), ignore_index = True)
 
-def scrape_all_urls():
-    full_df = pd.DataFrame(columns = headers)
+
+def scrape_all_urls(file = 'GFM_data.csv'):
     for i in range(len(mydf)):
-        full_df = full_df.append(scrape_url(i), ignore_index = True)
-    return(full_df)
-
-full_df = scrape_all_urls()
+        temp_df = scrape_url(i)
+        temp_df.to_csv(file, mode = 'a',sep = '\t', header = False)
+        print("Scraping url %s" %(i+1))
+        
+scrape_all_urls()
