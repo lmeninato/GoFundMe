@@ -6,6 +6,9 @@ from time import sleep
 import numpy as np
 import pandas as pd
 import re
+import os
+path = os.getcwd()
+os.chdir(path)
 
 url = 'https://www.gofundme.com/discover'
 driver = webdriver.Chrome('C:/webdriver/chromedriver.exe')
