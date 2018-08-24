@@ -3,6 +3,7 @@
 from bs4 import BeautifulSoup
 import numpy as np
 import pandas as pd
+from time import sleep
 import requests
 import re
 
@@ -87,8 +88,15 @@ def scrape_url(row_index):
 
 def scrape_all_urls(file = 'GFM_data.csv', start = 0, end = len(mydf)):
     for i in range(start, end):
-        temp_df = scrape_url(i)
-        temp_df.to_csv(file, mode = 'a',sep = '\t', header = False)
-        print("Scraping url %s" %(i+1))
+        try:
+            temp_df = scrape_url(i)
+            temp_df.to_csv(file, mode = 'a',sep = '\t', header = False)
+            print("Scraping url %s" %(i+1))
+        except:
+            sleep(5)
+            temp_df = scrape_url(i)
+            temp_df.to_csv(file, mode = 'a',sep = '\t', header = False)
+            print("Scraping url %s" %(i+1))
+            
         
 scrape_all_urls()
