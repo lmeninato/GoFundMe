@@ -32,8 +32,13 @@ while start < len(df):
             longitude = geolocator.geocode(df['Location'][i]).longitude
         except:
             sleep(60)
-            latitude = geolocator.geocode(df['Location'][i]).latitude
-            longitude = geolocator.geocode(df['Location'][i]).longitude
+            try:
+                latitude = geolocator.geocode(df['Location'][i]).latitude
+                longitude = geolocator.geocode(df['Location'][i]).longitude
+            except:
+                latitude = ''
+                longitude = ''
+                
         print("Getting latitude %s" %(i+1))
         latitudes = np.append(latitudes, latitude)
         print("Getting longitude %s" %(i+1))

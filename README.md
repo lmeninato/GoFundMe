@@ -1,1 +1,11 @@
 # GoFundMe
+
+This is an ongoing project to see what types of GoFundMe projects are successful and also which GoFundMe projects are scams
+or undeserving of fundraising.
+GoFundMe does not provide an API for obtaining data from GoFundMe pages, therefore this project is a web scraper using 
+selenium and chromedriver to navigate through the GoFundMe website to extract the top GoFundMe urls 
+and then I use requests and BeautifulSoup to parse the raw html of each url in a systematic fashion. I can either directly
+extract information from the urls using regex and BeautifulSoup, or I engineer features for the dataset, such as getting the
+longitudes and latitudes from the city the user starts the GoFundMe from. 
+
+Once my dataset is finished (almost!) I will analyze it using R. 
