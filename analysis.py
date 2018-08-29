@@ -21,25 +21,35 @@ df = df.reset_index(drop=True)
 
 geolocator = Nominatim(user_agent="test2")
 
-latitudes = np.array([])
-longitudes = np.array([])
+latitudes = np.repeat('', len(df))
+longitudes = np.repeat('', len(df))
 
 start = 0
 for i in range(start,len(df)):
     try:
         latitude = geolocator.geocode(df['Location'][i]).latitude
         longitude = geolocator.geocode(df['Location'][i]).longitude
+        
+        latitudes[i] = latitude
+        longitudes[i] = longitudes
+        
     except:
-        while latitude[i] == '':
+        while latitudes[i] == '':
             
             sleep(60)
             
             try:
                 latitude = geolocator.geocode(df['Location'][i]).latitude
                 longitude = geolocator.geocode(df['Location'][i]).longitude
+                
+                latitudes[i] = latitude
+                longitudes[i] = longitudes
             except:
                 latitude = ''
                 longitude = ''
+                
+                latitudes[i] = latitude
+                longitudes[i] = longitudes
             
     print("Getting latitude %s" %(i+1))
     latitudes = np.append(latitudes, latitude)
