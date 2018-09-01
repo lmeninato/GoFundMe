@@ -24,23 +24,34 @@ geolocator = GoogleV3()
 latitudes = np.repeat('', len(df))
 longitudes = np.repeat('', len(df))
 
-start = 0
-end = 700
+start = 700
+end = len(df)
 for i in range(start, end):
     try:
         print("Getting latitude %s" %(i+1))
-        latitude = geolocator.geocode(df['Location'][i]).latitude
+        
+        location_geocode = geolocator.geocode(df['Location'][i])
+        
+        latitude = location_geocode.latitude
         
         print("Getting longitude %s" %(i+1))
-        longitude = geolocator.geocode(df['Location'][i]).longitude
+        longitude = location_geocode.longitude
         
     except:
-            
+        
+        print("Error: retrying in 60 seconds...")
+        
         sleep(60)
         
         try:
-            latitude = geolocator.geocode(df['Location'][i]).latitude
-            longitude = geolocator.geocode(df['Location'][i]).longitude
+            
+            location_geocode = geolocator.geocode(df['Location'][i])
+            print("Getting latitude (attempt two) %s" %(i+1))
+
+            latitude = location_geocode.latitude
+            
+            print("Getting longitude (attempt two) %s" %(i+1))
+            longitude = location_geocode.longitude
             
         except:
             latitude = np.nan
@@ -51,8 +62,8 @@ for i in range(start, end):
     print("Longitude: %s" % longitude)
     longitudes = np.append(longitudes, longitude)
     
-np.savez("array_dump1.npy", latitudes, longitudes)
-
+#np.savez("array_dump1", latitudes, longitudes)
+np.savez("array_dump2", latitudes, longitudes)
 
 df['Latitude'] = latitudes
 df['Longitude'] = longitudes
