@@ -63,9 +63,27 @@ for i in range(start, end):
     longitudes = np.append(longitudes, longitude)
     
 #np.savez("array_dump1", latitudes, longitudes)
-np.savez("array_dump2", latitudes, longitudes)
+#np.savez("array_dump2", latitudes, longitudes)
 
-df['Latitude'] = latitudes
-df['Longitude'] = longitudes
+temp_data = np.load("array_dump1.npz")
+
+temp_lats = temp_data['arr_0']
+temp_lats = temp_lats[temp_lats != '']
+
+temp_long = temp_data['arr_1']
+temp_long = temp_long[temp_long != '']
+
+temp_data2 = np.load("array_dump2.npz")
+temp_lats2 = temp_data2['arr_0']
+temp_lats2 = temp_lats2[temp_lats2 != '']
+
+temp_long2 = temp_data2['arr_1']
+temp_long2 = temp_long2[temp_long2 != '']
+
+all_lats = temp_lats.tolist() + temp_lats2.tolist()
+all_longs = temp_long.tolist() + temp_long2.tolist()
+
+df['Latitude'] = all_lats
+df['Longitude'] = all_longs
 
 df.to_csv('GFM_data.csv', sep = '\t')
