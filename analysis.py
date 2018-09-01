@@ -25,7 +25,8 @@ latitudes = np.repeat('', len(df))
 longitudes = np.repeat('', len(df))
 
 start = 0
-for i in range(start,len(df)):
+end = 700
+for i in range(start, end):
     try:
         print("Getting latitude %s" %(i+1))
         latitude = geolocator.geocode(df['Location'][i]).latitude
@@ -42,22 +43,16 @@ for i in range(start,len(df)):
             longitude = geolocator.geocode(df['Location'][i]).longitude
             
         except:
-            latitude = ''
-            longitude = ''
-            sleep(300)
-            while latitude == '':
-                try:
-                    latitude = geolocator.geocode(df['Location'][i]).latitude
-                    longitude = geolocator.geocode(df['Location'][i]).longitude
-                except:
-                    latitude = np.nan
-                    longitude = np.nan
+            latitude = np.nan
+            longitude = np.nan
 
     print("Latitude: %s" % latitude)
     latitudes = np.append(latitudes, latitude)
     print("Longitude: %s" % longitude)
     longitudes = np.append(longitudes, longitude)
     
+np.savez("array_dump1.npy", latitudes, longitudes)
+
 
 df['Latitude'] = latitudes
 df['Longitude'] = longitudes
