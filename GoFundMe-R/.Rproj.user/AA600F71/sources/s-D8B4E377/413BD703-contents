@@ -59,3 +59,30 @@ gfm_df = gfm_df %>%
   mutate(Number_of_Donators = num_donors) %>%
   mutate(FB_Shares = fb_shares) %>%
   mutate(GFM_hearts = gfm_hearts)
+
+transform_time <- function(str_time){
+  str_time = str_replace_na(str_time)
+  
+  if (str_detect(str_time, "(days)|(day)")){
+    str_time = str_replace(str_time, "(days)|(day)", "")
+    return(as.numeric(str_time))
+  }
+  if (str_detect(str_time, "(months)|(month)")){
+    str_time = str_replace(str_time, "(months)|(month)", "")
+    return(as.numeric(str_time)*30)
+  }
+  if (str_detect(str_time, "(years)|(year)")){
+    str_time = str_replace(str_time, "(years)|(year)", "")
+    return(as.numeric(str_time)*365)
+  } else {
+    return(NA)
+  }
+}
+
+length_fundraising = map_dbl(length_fundraising, transform_time)
+
+gfm_df <- gfm_df %>%
+  mutate(Length_of_Fundraising = length_fundraising)
+
+save(gfm_df, file = "clean_GFM_data.RData")
+
