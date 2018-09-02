@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1535905217276.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2517148153",
+    "id" : "413BD703",
+    "lastKnownWriteTime" : 1535910178,
+    "last_content_update" : 1535910178971,
+    "path" : "~/GitHub/GoFundMe/GoFundMe-R/clean_GFM_data.R",
+    "project_path" : "clean_GFM_data.R",
+    "properties" : {
+        "cursorPosition" : "60,33",
+        "scrollLine" : "37",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

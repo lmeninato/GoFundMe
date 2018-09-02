@@ -87,3 +87,6 @@ df['Latitude'] = all_lats
 df['Longitude'] = all_longs
 
 df.to_csv('GFM_data.csv', sep = '\t')
+
+
+
