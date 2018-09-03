@@ -8,12 +8,12 @@
 #'   \item{Category}{category of the GoFundMe page}
 #'   \item{Position}{row position of GoFundMe page on the category url, 0 being the highest position.}
 #'   \item{Title}{title of the GoFundMe page}
-#'   \item{Location}{location of the poster of the GoFundMe}
+#'   \item{Location}{location of the creator of the GoFundMe}
 #'   \item{Amount_Raised}{amount raised by the GoFundMe page at the time of web scraping}
-#'   \item{Goal}{goal amount to raise by the GoFundMe page}
+#'   \item{Goal}{goal amount of the GoFundMe page}
 #'   \item{Number_of_Donators}{number of unique donors to the GoFundMe page}
-#'   \item{Length_of_Fundraising}{approximate number of days the GoFundMe page has been active for}
-#'   \item{FB_Shares}{number of Facebook shares the GoFundMe page has}
+#'   \item{Length_of_Fundraising}{approximate number of days the GoFundMe page has been active}
+#'   \item{FB_Shares}{number of Facebook shares of the GoFundMe page}
 #'   \item{text}{summary of the GoFundMe page text}
 #'   \item{Latitude}{approximate latitude of the GoFundMe page}
 #'   \item{Longitude}{approximate longitude of the GoFundMe page} 

@@ -5,14 +5,14 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "834947569",
     "id" : "C42462FB",
-    "lastKnownWriteTime" : 1536000688,
-    "last_content_update" : 1536000688521,
+    "lastKnownWriteTime" : 1536002036,
+    "last_content_update" : 1536002036477,
     "path" : "~/GitHub/GoFundMe/R/data.R",
     "project_path" : "R/data.R",
     "properties" : {
-        "cursorPosition" : "22,0",
+        "cursorPosition" : "15,49",
         "scrollLine" : "0",
         "tempName" : "Untitled1"
     },
