@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1536002158553.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "7C6F7C8A",
+    "lastKnownWriteTime" : 1536003177,
+    "last_content_update" : 1536003177729,
+    "path" : "~/GitHub/GoFundMe/R/load_data.R",
+    "project_path" : "R/load_data.R",
+    "properties" : {
+        "cursorPosition" : "3,41",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
