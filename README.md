@@ -19,7 +19,7 @@ From this we can extract several data points, such as the number of "hearts" a p
 
 ![sample scrape of url](/images/gofundme_sample_scrape.png)
 
-As long as the information is in a consistent location for each url (extracted by navigating the GoFundMe website using selenium for each category) I can have various attributes for each observation (scraped url).
+As long as the information is in a consistent location for each url (extracted by navigating the GoFundMe website using selenium for each category) I can have various attributes for each observation (each scraped url).
 
 
 
