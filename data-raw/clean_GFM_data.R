@@ -1,8 +1,6 @@
-setwd("~/Github/GoFundMe")
-
 library(tidyverse)
 
-gfm_df = read_tsv("GFM_data.csv")
+gfm_df = read_tsv("data-raw/GFM_data.csv")
 
 gfm_df <- gfm_df %>%
   select(-c(1))
@@ -84,5 +82,5 @@ length_fundraising = map_dbl(length_fundraising, transform_time)
 gfm_df <- gfm_df %>%
   mutate(Length_of_Fundraising = length_fundraising)
 
-save(gfm_df, file = "clean_GFM_data.RData")
+#save(gfm_df, file = "clean_GFM_data.RData")
 
