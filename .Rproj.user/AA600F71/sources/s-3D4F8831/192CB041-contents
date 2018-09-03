@@ -12,4 +12,15 @@ The dataset can be accessed easily either by downloading raw tab-delimited `GFM_
 ```{R}
 devtools::install_github("lmeninato/GoFundMe")
 ```
-To be added: documentation on the methodology of how the data was scraped. 
+A lot of information can be found on every GoFundMe url. Here is a sample GFM page:
+![sample GFM url](/images/gofundme_sample_url.png)
+
+From this we can extract several data points, such as the number of "hearts" a page has, how much money was fundraised by how many different people, text summarizing the cause of the fundraising, etc. Here I highlight how this can be done:
+
+![sample scrape of url](/images/gofundme_sample_scrape.png)
+
+As long as the information is in a consistent location for each url (extracted by navigating the GoFundMe website using selenium for each category) I can have various attributes for each observation (scraped url).
+
+
+
+

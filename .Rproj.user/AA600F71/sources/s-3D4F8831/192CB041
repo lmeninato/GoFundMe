@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3095714147",
+    "hash" : "3672832912",
     "id" : "192CB041",
-    "lastKnownWriteTime" : 1536001714,
-    "last_content_update" : 1536001714036,
+    "lastKnownWriteTime" : 1536006067,
+    "last_content_update" : 1536006067105,
     "path" : "~/GitHub/GoFundMe/README.md",
     "project_path" : "README.md",
     "properties" : {
-        "cursorPosition" : "9,27",
-        "scrollLine" : "3"
+        "cursorPosition" : "21,213",
+        "scrollLine" : "5"
     },
     "relative_order" : 5,
     "source_on_save" : false,
