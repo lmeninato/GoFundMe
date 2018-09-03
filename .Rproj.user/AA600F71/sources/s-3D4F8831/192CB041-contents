@@ -13,7 +13,7 @@ The dataset can be accessed easily either by downloading raw tab-delimited `GFM_
 devtools::install_github("lmeninato/GoFundMe")
 ```
 A lot of information can be found on every GoFundMe url. Here is a sample GFM page:
-![sample GFM url](/images/gofundme_sample_url.png)
+![sample GFM url](/images/gofundme_sample_url.PNG)
 
 From this we can extract several data points, such as the number of "hearts" a page has, how much money was fundraised by how many different people, text summarizing the cause of the fundraising, etc. Here I highlight how this can be done:
 
