@@ -1,6 +1,6 @@
 # GoFundMe
 
-This is an ongoing project to examine what types of GoFundMe projects are successful as well which GoFundMe pages are scams
+This is an ongoing project (I need to refactor code and add more documentation) to examine what types of GoFundMe projects are successful as well which GoFundMe pages are scams
 or undeserving of donations.
 GoFundMe does not provide an API for obtaining data from GoFundMe pages; therefore, this project is a web scraper utilizing
 selenium and chromedriver to navigate through the GoFundMe website to extract the top GoFundMe urls.
